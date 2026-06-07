@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Manrope:wght@400;500;600;700&display=swap');
+
+:root {
+    --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+    --font-body: 'Manrope', system-ui, sans-serif;
+}
+
+body {
+    font-family: var(--font-body);
+}
+
+.admin {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    background: #f3f4f6;
+    color: #111827;
+}
+
+.admin--centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.125rem;
+}
+
+.admin__sidebar {
+    background: #111827;
+    color: #f9fafb;
+    padding: 1.5rem 1rem;
+}
+
+.admin__brand {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+
+.admin__menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.admin__menu-item {
+    border: none;
+    background: transparent;
+    color: #d1d5db;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.admin__menu-item:hover,
+.admin__menu-item--active {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+}
+
+.admin__main {
+    padding: 1.5rem;
+}
+
+.admin__header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.admin__header h1 {
+    margin: 0 0 0.25rem;
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+}
+
+.admin__header p {
+    margin: 0;
+    color: #6b7280;
+}
+
+.admin__profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 0.75rem 1rem;
+}
+
+.admin__avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    object-fit: cover;
+}
+
+.admin__name {
+    font-weight: 600;
+}
+
+.admin__email {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.admin__logout {
+    margin-left: 0.5rem;
+    color: #dc2626;
+    text-decoration: none;
+    font-size: 0.875rem;
+    white-space: nowrap;
+}
+
+.admin__panel {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 1.5rem;
+}
+
+.admin__panel h2 {
+    margin-top: 0;
+}
+
+.admin__cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.admin__card {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.875rem;
+    padding: 1rem;
+}
+
+.admin__card-label {
+    display: block;
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-bottom: 0.35rem;
+}
+
+@media (max-width: 768px) {
+    .admin {
+        grid-template-columns: 1fr;
+    }
+
+    .admin__sidebar {
+        padding-bottom: 1rem;
+    }
+
+    .admin__menu {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .admin__header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

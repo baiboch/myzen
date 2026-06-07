@@ -1,0 +1,25 @@
+knpu_oauth2_client:
+    clients:
+        google:
+            type: google
+            client_id: '%env(GOOGLE_CLIENT_ID)%'
+            client_secret: '%env(GOOGLE_CLIENT_SECRET)%'
+            redirect_route: connect_google_check
+            redirect_params: {}
+
+        facebook:
+            type: facebook
+            client_id: '%env(FACEBOOK_CLIENT_ID)%'
+            client_secret: '%env(FACEBOOK_CLIENT_SECRET)%'
+            redirect_route: connect_facebook_check
+            redirect_params: {}
+            graph_api_version: v21.0
+
+        apple:
+            type: apple
+            client_id: '%env(APPLE_CLIENT_ID)%'
+            redirect_route: connect_apple_check
+            redirect_params: {}
+            team_id: '%env(APPLE_TEAM_ID)%'
+            key_file_id: '%env(APPLE_KEY_ID)%'
+            key_file_path: '%kernel.project_dir%/config/apple/AuthKey.p8'

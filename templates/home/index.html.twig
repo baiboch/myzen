@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MyZEN — ваша страница за три минуты{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/landing.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div id="root"></div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="module" src="{{ asset('build/landing.js') }}"></script>
+{% endblock %}

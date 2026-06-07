@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Вход — MyZEN{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/login.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div id="root"></div>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="module" src="{{ asset('build/login.js') }}"></script>
+{% endblock %}

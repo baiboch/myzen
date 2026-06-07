@@ -1,5 +1,9 @@
 <?php
 
-declare(strict_types=1);
+use App\Kernel;
 
-echo 'MyZen Docker stack is running. Symfony app will be here next.';
+require_once dirname(__DIR__).'/vendor/autoload_runtime.php';
+
+return static function (array $context) {
+    return new Kernel($context['APP_ENV'], (bool) $context['APP_DEBUG']);
+};
