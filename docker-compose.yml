@@ -1,0 +1,45 @@
+services:
+  php:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: myzen-php
+    working_dir: /var/www/html
+    volumes:
+      - .:/var/www/html
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-myzen}:${POSTGRES_PASSWORD:-myzen}@db:5432/${POSTGRES_DB:-myzen}?serverVersion=16&charset=utf8
+    depends_on:
+      db:
+        condition: service_healthy
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: myzen-nginx
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      - .:/var/www/html:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - php
+
+  db:
+    image: postgres:16-alpine
+    container_name: myzen-db
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-myzen}
+      POSTGRES_USER: ${POSTGRES_USER:-myzen}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-myzen}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-myzen} -d ${POSTGRES_DB:-myzen}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
