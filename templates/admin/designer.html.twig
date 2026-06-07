@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Конструктор — MyZEN{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('build/designer.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div id="root"></div>
+{% endblock %}
+
+{% block javascripts %}
+    {% block importmap %}{% endblock %}
+    <script type="module" src="{{ asset('build/designer.js') }}"></script>
+{% endblock %}
