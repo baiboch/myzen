@@ -45,8 +45,11 @@ class UserRepository extends ServiceEntityRepository
 
         $user
             ->setEmail($email)
-            ->setName($name)
-            ->setAvatar($avatar);
+            ->setName($name);
+
+        if ($avatar !== null && $avatar !== '') {
+            $user->setAvatar($avatar);
+        }
 
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();

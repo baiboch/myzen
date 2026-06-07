@@ -17,4 +17,22 @@ final class AdminController extends AbstractController
     {
         return $this->render('admin/index.html.twig');
     }
+
+    #[Route('/admin/pages', name: 'app_admin_pages')]
+    public function pages(): Response
+    {
+        return $this->render('admin/index.html.twig');
+    }
+
+    #[Route('/admin/settings', name: 'app_admin_settings')]
+    public function settings(): Response
+    {
+        return $this->render('admin/index.html.twig');
+    }
+
+    #[Route('/admin/designer', name: 'app_admin_designer')]
+    public function designer(): Response
+    {
+        return $this->render('admin/designer.html.twig');
+    }
 }

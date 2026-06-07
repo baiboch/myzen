@@ -24,6 +24,7 @@ final class MeController extends AbstractController
             'name' => $user->getName(),
             'avatar' => $user->getAvatar(),
             'roles' => $user->getRoles(),
+            'provider' => $user->getProvider(),
         ]);
     }
 }

@@ -28,6 +28,7 @@ security:
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/admin, roles: ROLE_USER }
         - { path: ^/api/me, roles: ROLE_USER }
+        - { path: ^/api/design, roles: ROLE_USER }
 
 when@test:
     security:

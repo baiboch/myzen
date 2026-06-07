@@ -5,11 +5,21 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Entity\User;
+use App\Service\OAuthProfileExtractor;
 use League\OAuth2\Client\Provider\GoogleUser;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 
 final class GoogleAuthenticator extends AbstractOAuthAuthenticator
 {
+    public function __construct(
+        \KnpU\OAuth2ClientBundle\Client\ClientRegistry $clientRegistry,
+        \App\Repository\UserRepository $userRepository,
+        \Symfony\Component\Routing\RouterInterface $router,
+        private readonly OAuthProfileExtractor $profileExtractor,
+    ) {
+        parent::__construct($clientRegistry, $userRepository, $router);
+    }
+
     protected function getClientName(): string
     {
         return 'google';
@@ -29,8 +39,8 @@ final class GoogleAuthenticator extends AbstractOAuthAuthenticator
             User::PROVIDER_GOOGLE,
             (string) $resourceOwner->getId(),
             $email !== '' ? $email : sprintf('google-%s@myzen.local', $resourceOwner->getId()),
-            (string) ($resourceOwner->getName() ?? $resourceOwner->getEmail() ?? 'Google User'),
-            $resourceOwner->getAvatar(),
+            $this->profileExtractor->extractName($resourceOwner, User::PROVIDER_GOOGLE, 'Google User'),
+            $this->profileExtractor->extractAvatar($resourceOwner, User::PROVIDER_GOOGLE),
         );
     }
 }

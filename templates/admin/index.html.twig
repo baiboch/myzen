@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Админка — MyZen{% endblock %}
+{% block title %}Админка — MyZEN{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('build/admin.css') }}">
@@ -11,5 +11,6 @@
 {% endblock %}
 
 {% block javascripts %}
+    {% block importmap %}{% endblock %}
     <script type="module" src="{{ asset('build/admin.js') }}"></script>
 {% endblock %}

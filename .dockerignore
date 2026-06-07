@@ -6,4 +6,3 @@ var/
 vendor/
 node_modules/
 public/build/
-.env

@@ -1,14 +1,56 @@
 import { useEffect, useState } from 'react';
+import AdminLayout from '../components/AdminLayout.jsx';
+import CreateDesignCard from '../components/CreateDesignCard.jsx';
 
-const menuItems = [
-    { id: 'dashboard', label: 'Обзор' },
-    { id: 'users', label: 'Пользователи' },
-    { id: 'settings', label: 'Настройки' },
-];
+const sectionMeta = {
+    dashboard: {
+        title: 'Обзор',
+        subtitle: 'Сводка по аккаунту и быстрые действия',
+    },
+    pages: {
+        title: 'Страницы',
+        subtitle: 'Ваши опубликованные страницы',
+    },
+    settings: {
+        title: 'Настройки',
+        subtitle: 'Данные аккаунта и входа',
+    },
+};
+
+const providerLabels = {
+    google: 'Google',
+    facebook: 'Facebook',
+    apple: 'Apple',
+};
+
+function formatRoles(roles) {
+    return roles
+        .filter((role) => role !== 'ROLE_USER')
+        .map((role) => role.replace('ROLE_', ''))
+        .join(', ') || 'Пользователь';
+}
+
+function getActiveSectionFromPath() {
+    const path = window.location.pathname;
+
+    if (path.startsWith('/admin/designer')) {
+        return 'designer';
+    }
+
+    if (path === '/admin/pages') {
+        return 'pages';
+    }
+
+    if (path === '/admin/settings') {
+        return 'settings';
+    }
+
+    return 'dashboard';
+}
 
 export default function AdminApp() {
     const [user, setUser] = useState(null);
-    const [activeSection, setActiveSection] = useState('dashboard');
+    const [activeSection] = useState(getActiveSectionFromPath);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
@@ -27,86 +69,135 @@ export default function AdminApp() {
     }, []);
 
     if (loading) {
-        return <div className="admin admin--centered">Загрузка...</div>;
+        return (
+            <div className="admin-layout admin-layout--state">
+                <div className="admin-layout__state">Загрузка...</div>
+            </div>
+        );
     }
 
     if (error || !user) {
-        return <div className="admin admin--centered">{error || 'Пользователь не найден'}</div>;
+        return (
+            <div className="admin-layout admin-layout--state">
+                <div className="admin-layout__state">{error || 'Пользователь не найден'}</div>
+            </div>
+        );
     }
 
-    return (
-        <div className="admin">
-            <aside className="admin__sidebar">
-                <div className="admin__brand">MyZen Admin</div>
-                <nav className="admin__menu">
-                    {menuItems.map((item) => (
-                        <button
-                            key={item.id}
-                            type="button"
-                            className={activeSection === item.id ? 'admin__menu-item admin__menu-item--active' : 'admin__menu-item'}
-                            onClick={() => setActiveSection(item.id)}
-                        >
-                            {item.label}
-                        </button>
-                    ))}
-                </nav>
-            </aside>
+    const providerLabel = providerLabels[user.provider] || user.provider || 'OAuth';
+    const meta = sectionMeta[activeSection] || sectionMeta.dashboard;
 
-            <main className="admin__main">
-                <header className="admin__header">
-                    <div>
-                        <h1>Минимальная админка</h1>
-                        <p>Вы вошли через Google</p>
+    return (
+        <AdminLayout
+            user={user}
+            activeSection={activeSection}
+            pageTitle={meta.title}
+            pageSubtitle={meta.subtitle}
+        >
+            {activeSection === 'dashboard' && (
+                <>
+                    <div className="admin-panel__cards">
+                        <article className="admin-panel__card">
+                            <span className="admin-panel__card-label">Страниц</span>
+                            <strong className="admin-panel__card-value">0</strong>
+                        </article>
+                        <article className="admin-panel__card">
+                            <span className="admin-panel__card-label">Статус</span>
+                            <strong className="admin-panel__card-value admin-panel__card-value--accent">Активен</strong>
+                        </article>
+                        <article className="admin-panel__card">
+                            <span className="admin-panel__card-label">Вход через</span>
+                            <strong className="admin-panel__card-value admin-panel__card-value--sm">{providerLabel}</strong>
+                        </article>
+                        <article className="admin-panel__card">
+                            <span className="admin-panel__card-label">Роль</span>
+                            <strong className="admin-panel__card-value admin-panel__card-value--sm">{formatRoles(user.roles)}</strong>
+                        </article>
                     </div>
-                    <div className="admin__profile">
-                        {user.avatar && (
-                            <img src={user.avatar} alt={user.name} className="admin__avatar" />
+
+                    <CreateDesignCard />
+
+                    <section className="admin-panel">
+                        <h2 className="admin-panel__title">Быстрый старт</h2>
+                        <div className="admin-panel__steps">
+                            <div className="admin-panel__step">
+                                <span>1</span>
+                                <div>
+                                    <strong>Откройте AI-конструктор</strong>
+                                    <p>Опишите страницу в чате с нейросетью.</p>
+                                </div>
+                            </div>
+                            <div className="admin-panel__step">
+                                <span>2</span>
+                                <div>
+                                    <strong>Посмотрите макет</strong>
+                                    <p>Справа появится превью HTML/CSS в конструкторе.</p>
+                                </div>
+                            </div>
+                            <div className="admin-panel__step">
+                                <span>3</span>
+                                <div>
+                                    <strong>Опубликуйте</strong>
+                                    <p>Поделитесь ссылкой yourname.myzen.ru.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </>
+            )}
+
+            {activeSection === 'pages' && (
+                <section className="admin-panel admin-panel--empty">
+                    <h2 className="admin-panel__title">Нет страниц</h2>
+                    <p className="admin-panel__text">
+                        У вас пока нет опубликованных страниц. Создайте первую через AI-конструктор.
+                    </p>
+                    <a href="/admin/designer" className="admin-panel__btn">✦ Создать дизайн с AI →</a>
+                </section>
+            )}
+
+            {activeSection === 'settings' && (
+                <section className="admin-panel">
+                    <h2 className="admin-panel__title">Аккаунт</h2>
+                    <div className="admin-panel__profile-head">
+                        {user.avatar ? (
+                            <img
+                                src={user.avatar}
+                                alt={user.name}
+                                className="admin-panel__profile-avatar"
+                                referrerPolicy="no-referrer"
+                                crossOrigin="anonymous"
+                            />
+                        ) : (
+                            <div className="admin-panel__profile-avatar admin-panel__profile-avatar--placeholder">
+                                {user.name.split(' ').slice(0, 2).map((part) => part[0]).join('').toUpperCase()}
+                            </div>
                         )}
                         <div>
-                            <div className="admin__name">{user.name}</div>
-                            <div className="admin__email">{user.email}</div>
+                            <strong>{user.name}</strong>
+                            <p>{providerLabel}</p>
                         </div>
-                        <a href="/logout" className="admin__logout">Выйти</a>
                     </div>
-                </header>
-
-                <section className="admin__panel">
-                    {activeSection === 'dashboard' && (
-                        <>
-                            <h2>Обзор</h2>
-                            <p>Добро пожаловать, {user.name}. Это стартовая панель управления.</p>
-                            <div className="admin__cards">
-                                <article className="admin__card">
-                                    <span className="admin__card-label">Статус</span>
-                                    <strong>Активен</strong>
-                                </article>
-                                <article className="admin__card">
-                                    <span className="admin__card-label">Роль</span>
-                                    <strong>{user.roles.join(', ')}</strong>
-                                </article>
-                                <article className="admin__card">
-                                    <span className="admin__card-label">Провайдер</span>
-                                    <strong>Google OAuth</strong>
-                                </article>
-                            </div>
-                        </>
-                    )}
-
-                    {activeSection === 'users' && (
-                        <>
-                            <h2>Пользователи</h2>
-                            <p>Раздел-заглушка. Здесь позже появится список пользователей.</p>
-                        </>
-                    )}
-
-                    {activeSection === 'settings' && (
-                        <>
-                            <h2>Настройки</h2>
-                            <p>Раздел-заглушка для будущих настроек проекта.</p>
-                        </>
-                    )}
+                    <dl className="admin-panel__list">
+                        <div>
+                            <dt>Имя</dt>
+                            <dd>{user.name}</dd>
+                        </div>
+                        <div>
+                            <dt>Email</dt>
+                            <dd>{user.email}</dd>
+                        </div>
+                        <div>
+                            <dt>Способ входа</dt>
+                            <dd>{providerLabel}</dd>
+                        </div>
+                        <div>
+                            <dt>Роль</dt>
+                            <dd>{formatRoles(user.roles)}</dd>
+                        </div>
+                    </dl>
                 </section>
-            </main>
-        </div>
+            )}
+        </AdminLayout>
     );
 }

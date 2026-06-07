@@ -14,6 +14,7 @@ export default defineConfig({
                 landing: resolve(__dirname, 'assets/react/main.jsx'),
                 login: resolve(__dirname, 'assets/react/login/main.jsx'),
                 admin: resolve(__dirname, 'assets/react/admin/main.jsx'),
+                designer: resolve(__dirname, 'assets/react/designer/main.jsx'),
             },
             output: {
                 entryFileNames: '[name].js',
